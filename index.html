@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>QuickSwitch</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #0b0d12; color: #e6e9ef; margin: 0; padding: 24px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { color: #8a91a3; margin: 0 0 20px; font-size: 13px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a91a3; margin: 24px 0 8px; }
+  button.action { display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 8px; background: #171a22; border: 1px solid #262b38; color: #e6e9ef; border-radius: 8px; cursor: pointer; font-size: 13px; }
+  button.action:hover { background: #1e2230; border-color: #2f3648; }
+  button.advanced { background: transparent; }
+  #log { margin-top: 20px; background: #05060a; border: 1px solid #1c2029; border-radius: 8px; padding: 10px; height: 180px; overflow-y: auto; font-family: ui-monospace, monospace; font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h1>QuickSwitch</h1>
+  <p class="sub">Network reset actions — release/renew IP, flush DNS cache. Pair with the firewall/IDS tool you already have running.</p>
+
+  <h2>Actions</h2>
+  <div id="actions"></div>
+
+  <h2>Advanced (needs separate runtime/IDS install)</h2>
+  <div id="advanced"></div>
+
+  <h2>Output</h2>
+  <div id="log">Ready.</div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
