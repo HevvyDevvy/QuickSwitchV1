@@ -1,0 +1,74 @@
+{
+  "name": "quickswitch-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QuickSwitch — one-click network reset (release/renew IP, flush DNS) paired with your firewall/IDS tool.",
+  "author": {
+    "name": "Blu Corbel aka DeadmanXXXII",
+    "username": "DeadmanXXXII",
+    "email": "blucorbel35@gmail.com"
+  },
+  "homepage": "https://github.com/DeadmanXXXII/QuickSwitch",
+  "main": "electron-main.cjs",
+  "scripts": {
+    "dev": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "sudo-prompt": "^9.2.1"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "26.15.7"
+  },
+  "build": {
+    "appId": "io.github.deadmanxxxii.quickswitch",
+    "productName": "QuickSwitch",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release",
+      "buildResources": "build-resources"
+    },
+    "files": [
+      "electron-main.cjs",
+      "preload.cjs",
+      "index.html",
+      "renderer.js",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "resources/scripts", "to": "scripts" }
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "build-resources/icon.png",
+      "target": ["dmg"]
+    },
+    "win": {
+      "icon": "build-resources/icon.png",
+      "target": ["nsis", "appx"],
+      "signtoolOptions": {
+        "publisherName": "REPLACE_WITH_YOUR_CERT_SUBJECT_CN",
+        "signingHashAlgorithms": ["sha256"],
+        "rfc3161TimeStampServer": "http://timestamp.digicert.com",
+        "sign": "./customSign.cjs"
+      }
+    },
+    "appx": {
+      "identityName": "DeadmanXXXII.QuickSwitch",
+      "publisher": "CN=REPLACE_WITH_YOUR_CERT_SUBJECT_CN",
+      "publisherDisplayName": "DeadmanXXXII",
+      "applicationId": "QuickSwitch"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "icon": "build-resources/icon.png",
+      "category": "Utility",
+      "target": ["AppImage", "deb"],
+      "executableName": "QuickSwitch"
+    }
+  }
+}
