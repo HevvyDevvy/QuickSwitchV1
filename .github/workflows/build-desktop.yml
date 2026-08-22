@@ -87,7 +87,6 @@ jobs:
           path: |
             release/*.dmg
             release/*.exe
-            release/*.appx
             release/*.AppImage
             release/*.deb
           if-no-files-found: warn
@@ -99,6 +98,5 @@ jobs:
           files: |
             release/*.dmg
             release/*.exe
-            release/*.appx
             release/*.AppImage
             release/*.deb
