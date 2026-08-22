@@ -3,14 +3,24 @@ name: Build desktop app
 # Builds QuickSwitch as a downloadable desktop installer for Windows, macOS,
 # and Linux via electron-builder.
 #
-# CODE SIGNING: CSC_LINK / CSC_KEY_PASSWORD repo secrets supply the Windows
-# code-signing certificate. On windows-latest, the "Locate real signtool.exe"
-# step points electron-builder at the system-installed signtool.exe (from the
-# Windows SDK) instead of its bundled copy, since the bundled one fails to
-# sign .appx packages with "A required function is not present". macOS
-# builds still need a paid Apple Developer ID cert wired in separately if/when
-# you have one — until then, Gatekeeper will block the .dmg until the person
-# right-clicks -> Open (or runs `xattr -d com.apple.quarantine QuickSwitch.app`).
+# STATUS: Windows signs with a self-signed Authenticode cert (CSC_LINK /
+# CSC_KEY_PASSWORD repo secrets, generated via the DevCerts tool). This
+# unblocks the build and satisfies signtool, but does NOT give you a
+# trusted publisher: .exe installs still show a SmartScreen warning, and
+# the .appx will only install on machines that have manually imported and
+# trusted the public cert. Move to a CA-issued cert before public release.
+#
+# macOS: CSC_LINK/CSC_KEY_PASSWORD are deliberately NOT passed to the mac
+# job. Self-signed certs cannot satisfy Apple's Gatekeeper at all — Apple
+# requires its own CA-issued Developer ID cert — and applying the Windows
+# secrets to this job by mistake is what caused the earlier mac failure
+# (electron-builder misread the value as a certificate file path). So mac
+# stays unsigned for now: electron-builder falls back to keychain
+# auto-discovery, finds nothing on the CI runner, and produces an unsigned
+# .dmg. Gatekeeper will block the .app until the person right-clicks -> Open
+# (or runs `xattr -d com.apple.quarantine QuickSwitch.app`).
+#
+# Linux is unaffected by any of this; no cert needed.
 
 on:
   workflow_dispatch: {}
@@ -27,11 +37,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            build-script: "npm run dist -- --linux"
+            build-script: "npm run dist -- --linux --publish never"
           - os: windows-latest
-            build-script: "npm run dist -- --win"
+            build-script: "npm run dist -- --win --publish never"
           - os: macos-latest
-            build-script: "npm run dist -- --mac"
+            build-script: "npm run dist -- --mac --publish never"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -55,10 +65,19 @@ jobs:
           if (-not $tool) { throw "signtool.exe not found under Windows Kits" }
           echo "SIGNTOOL_PATH=$($tool.FullName)" >> $env:GITHUB_ENV
 
-      - name: Build installer (${{ matrix.os }})
+      # Separate steps (not one step with a conditional env expression) so
+      # that on mac/Linux, CSC_LINK/CSC_KEY_PASSWORD are truly absent from
+      # the environment — not merely set to an empty string, which is what
+      # tripped up electron-builder's mac signing logic previously.
+      - name: Build installer (Windows, signed)
+        if: matrix.os == 'windows-latest'
+        run: ${{ matrix.build-script }}
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+
+      - name: Build installer (mac/Linux, unsigned)
+        if: matrix.os != 'windows-latest'
         run: ${{ matrix.build-script }}
 
       - name: Upload installer artifact
