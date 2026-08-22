@@ -48,7 +48,7 @@
       "icon": "build-resources/icon.png",
       "target": ["nsis", "appx"],
       "signtoolOptions": {
-        "publisherName": "REPLACE_WITH_YOUR_CERT_SUBJECT_CN",
+        "publisherName": "846a296b-c30b-471a-a570-2cb0ba096dce",
         "signingHashAlgorithms": ["sha256"],
         "rfc3161TimeStampServer": "http://timestamp.digicert.com",
         "sign": "./customSign.cjs"
@@ -56,7 +56,7 @@
     },
     "appx": {
       "identityName": "DeadmanXXXII.QuickSwitch",
-      "publisher": "CN=REPLACE_WITH_YOUR_CERT_SUBJECT_CN",
+      "publisher": "CN=846a296b-c30b-471a-a570-2cb0ba096dce",
       "publisherDisplayName": "DeadmanXXXII",
       "applicationId": "QuickSwitch"
     },
