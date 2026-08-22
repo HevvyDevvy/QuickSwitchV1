@@ -88,6 +88,7 @@ jobs:
             release/*.dmg
             release/*.exe
             release/*.AppImage
+            release/*.appx
             release/*.deb
           if-no-files-found: warn
 
@@ -99,4 +100,5 @@ jobs:
             release/*.dmg
             release/*.exe
             release/*.AppImage
+            release/*.appx
             release/*.deb
