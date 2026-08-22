@@ -56,7 +56,7 @@
     },
     "appx": {
       "identityName": "TMHP.com.QuickSwitch",
-      "publisher": "O=@TMHP.com, CN=BB6CF6A1-F89B-484C-85F4-1A7E35694B74",
+      "publisher": "CN=BB6CF6A1-F89B-484C-85F4-1A7E35694B74",
       "publisherDisplayName": "@TMHP.com",
       "applicationId": "QuickSwitch"
     },
